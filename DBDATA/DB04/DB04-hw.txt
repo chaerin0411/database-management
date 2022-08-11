@@ -1,0 +1,176 @@
+
+CREATE TABLE 과목
+(
+	과목번호             CHAR(18) NOT NULL ,
+	과목명               CHAR(18) NULL ,
+	과목개요             CHAR(18) NULL ,
+	담당교수             CHAR(18) NULL 
+);
+
+
+
+CREATE UNIQUE INDEX XPK과목 ON 과목
+(과목번호   ASC);
+
+
+
+ALTER TABLE 과목
+	ADD CONSTRAINT  XPK과목 PRIMARY KEY (과목번호);
+
+
+
+CREATE TABLE 교수
+(
+	교수번호             CHAR(18) NOT NULL ,
+	이름                 CHAR(18) NULL ,
+	전공분야             CHAR(18) NULL 
+);
+
+
+
+CREATE UNIQUE INDEX XPK교수 ON 교수
+(교수번호   ASC);
+
+
+
+ALTER TABLE 교수
+	ADD CONSTRAINT  XPK교수 PRIMARY KEY (교수번호);
+
+
+
+CREATE TABLE 등록
+(
+	학번                 CHAR(18) NOT NULL ,
+	과목번호             CHAR(18) NOT NULL 
+);
+
+
+
+CREATE UNIQUE INDEX XPK등록 ON 등록
+(학번   ASC,과목번호   ASC);
+
+
+
+ALTER TABLE 등록
+	ADD CONSTRAINT  XPK등록 PRIMARY KEY (학번,과목번호);
+
+
+
+CREATE TABLE 보유기술
+(
+	기술보유교수         CHAR(18) NOT NULL ,
+	보유기술             CHAR(18) NOT NULL 
+);
+
+
+
+CREATE UNIQUE INDEX XPK보유기술 ON 보유기술
+(기술보유교수   ASC,보유기술   ASC);
+
+
+
+ALTER TABLE 보유기술
+	ADD CONSTRAINT  XPK보유기술 PRIMARY KEY (기술보유교수,보유기술);
+
+
+
+CREATE TABLE 섹션
+(
+	과목번호             CHAR(18) NOT NULL ,
+	섹션번호             CHAR(18) NOT NULL 
+);
+
+
+
+CREATE UNIQUE INDEX XPK섹션 ON 섹션
+(과목번호   ASC,섹션번호   ASC);
+
+
+
+ALTER TABLE 섹션
+	ADD CONSTRAINT  XPK섹션 PRIMARY KEY (과목번호,섹션번호);
+
+
+
+CREATE TABLE 학과
+(
+	학과명               CHAR(18) NOT NULL ,
+	전화번호             CHAR(18) NULL ,
+	사무실위치           CHAR(18) NULL ,
+	학과장               CHAR(18) NULL ,
+	임명일자             CHAR(18) NULL 
+);
+
+
+
+CREATE UNIQUE INDEX XPK학과 ON 학과
+(학과명   ASC);
+
+
+
+ALTER TABLE 학과
+	ADD CONSTRAINT  XPK학과 PRIMARY KEY (학과명);
+
+
+
+CREATE TABLE 학생
+(
+	학번                 CHAR(18) NOT NULL ,
+	이름                 CHAR(18) NULL ,
+	주소                 CHAR(18) NULL ,
+	나이                 CHAR(18) NULL ,
+	생년월일             CHAR(18) NULL ,
+	학과명               CHAR(18) NULL ,
+	지도교수             CHAR(18) NULL ,
+	면담시간             CHAR(18) NULL 
+);
+
+
+
+CREATE UNIQUE INDEX XPK학생 ON 학생
+(학번   ASC);
+
+
+
+ALTER TABLE 학생
+	ADD CONSTRAINT  XPK학생 PRIMARY KEY (학번);
+
+
+
+ALTER TABLE 과목
+	ADD (CONSTRAINT R_7 FOREIGN KEY (담당교수) REFERENCES 교수 (교수번호) ON DELETE SET NULL);
+
+
+
+ALTER TABLE 등록
+	ADD (CONSTRAINT R_1 FOREIGN KEY (학번) REFERENCES 학생 (학번));
+
+
+
+ALTER TABLE 등록
+	ADD (CONSTRAINT R_2 FOREIGN KEY (과목번호) REFERENCES 과목 (과목번호));
+
+
+
+ALTER TABLE 보유기술
+	ADD (CONSTRAINT R_9 FOREIGN KEY (기술보유교수) REFERENCES 교수 (교수번호));
+
+
+
+ALTER TABLE 섹션
+	ADD (CONSTRAINT R_12 FOREIGN KEY (과목번호) REFERENCES 과목 (과목번호));
+
+
+
+ALTER TABLE 학과
+	ADD (CONSTRAINT R_10 FOREIGN KEY (학과장) REFERENCES 교수 (교수번호) ON DELETE SET NULL);
+
+
+
+ALTER TABLE 학생
+	ADD (CONSTRAINT R_3 FOREIGN KEY (학과명) REFERENCES 학과 (학과명) ON DELETE SET NULL);
+
+
+
+ALTER TABLE 학생
+	ADD (CONSTRAINT R_5 FOREIGN KEY (지도교수) REFERENCES 교수 (교수번호) ON DELETE SET NULL);
